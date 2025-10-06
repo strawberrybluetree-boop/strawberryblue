@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>StrawberryBlue</title>
+	<link rel="stylesheet" href="styles.css">
+	<link rel="icon" type="image/png" href="/favicon.png">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Manufacturing+Consent&display=swap" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+	<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js" defer></script>
+	<script src="script.js" defer></script>
+</head>
+<body>
+	<div id="container">
+		<!-- Background image -->
+		<div id="background">
+			<img src="images/background.webp" 
+				 alt="Background" 
+				 id="background-image" 
+				 loading="lazy"
+				 onerror="this.style.display='none';">
+		</div>
+		
+		<!-- Background tree image -->
+		<div id="tree-background">
+			<img src="images/tree.webp" 
+				 alt="Mystical Tree" 
+				 id="tree-image" 
+				 loading="lazy"
+				 onerror="this.style.display='none'; document.getElementById('tree-fallback').style.display='block';">
+			<div id="tree-fallback" style="display: none;">
+				<div class="fallback-tree">🌳</div>
+			</div>
+		</div>
+		
+		<!-- 3D Scene Container -->
+		<div id="three-container"></div>
+		
+		<!-- UI Elements -->
+		<div id="ui-elements">
+			<div id="loading-screen">
+				<div class="loader"></div>
+				<p>Loading...</p>
+			</div>
+			
+			<div id="audio-controls">
+				<div id="mute-text">mute</div>
+			</div>
+			
+			<div id="logo">
+				<img src="images/logo.png" 
+					 alt="Logo" 
+					 id="logo-image"
+					 loading="lazy">
+			</div>
+			
+			<!-- Now Playing notification -->
+			<div id="now-playing">
+				<div id="now-playing-text">now playing - </div>
+			</div>
+		</div>
+		
+		<!-- Wind particles - Multiple layers -->
+		<div id="wind-particles-back" class="wind-particles-layer"></div>
+		<div id="wind-particles-between-bg" class="wind-particles-layer"></div>
+		<div id="wind-particles-between-tree" class="wind-particles-layer"></div>
+		<div id="wind-particles-between-3d" class="wind-particles-layer"></div>
+		<div id="wind-particles-front" class="wind-particles-layer"></div>
+	</div>
+</body>
+</html>

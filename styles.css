@@ -1,0 +1,643 @@
+/* CSS Variables for better maintainability */
+:root {
+	--primary-gradient: linear-gradient(135deg, 
+		#c0c0c0 0%,
+		#a8b8c8 25%,
+		#8a9ba8 50%,
+		#7a8a9a 75%,
+		#6a7a8a 100%);
+	--loading-gradient: linear-gradient(135deg, 
+		rgba(192, 192, 192, 0.9) 0%,
+		rgba(138, 155, 168, 0.9) 50%,
+		rgba(106, 122, 138, 0.9) 100%);
+	--white-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+	--font-gothic: 'Manufacturing Consent', sans-serif;
+	--font-system: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	--transition-fast: 0.3s ease;
+	--transition-medium: 0.5s ease;
+	--border-radius: 4px;
+}
+
+/* Reset and base styles */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	/* iOS tap highlight removal */
+	-webkit-tap-highlight-color: transparent;
+	-webkit-touch-callout: none;
+}
+
+body, html {
+	height: 100%;
+	overflow: hidden;
+	font-family: var(--font-system);
+	background: var(--primary-gradient);
+	cursor: default;
+	/* iOS scroll fixes */
+	position: fixed;
+	width: 100%;
+	-webkit-overflow-scrolling: touch;
+}
+
+/* Performance optimizations */
+img {
+	image-rendering: -webkit-optimize-contrast;
+	image-rendering: crisp-edges;
+}
+
+canvas {
+	image-rendering: optimizeSpeed;
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -webkit-optimize-contrast;
+	image-rendering: optimize-contrast;
+	/* iOS touch handling */
+	touch-action: manipulation;
+}
+
+/* Main container */
+#container {
+	position: relative;
+	width: 100vw;
+	height: 100vh;
+}
+
+/* Background layers */
+#background {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#background-image {
+	max-width: 100%;
+	max-height: 100%;
+	width: auto;
+	height: 120vh;
+	object-fit: contain;
+	opacity: 0;
+	filter: blur(2px) brightness(0.8);
+	transition: opacity 3s ease-in;
+	will-change: transform, opacity, filter;
+}
+
+#background-image.fade-in {
+	opacity: 0.2;
+}
+
+/* Tree background */
+#tree-background {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#tree-image {
+	max-width: 100%;
+	max-height: 100%;
+	width: auto;
+	height: 95vh;
+	object-fit: contain;
+	opacity: 0.8;
+	filter: drop-shadow(var(--white-shadow));
+	transition: all var(--transition-fast);
+	transform: scale(0.96);
+	will-change: transform, filter;
+}
+
+/* Fallback tree */
+#tree-fallback {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.fallback-tree {
+	font-size: clamp(360px, 80vmin, 600px);
+	opacity: 0.6;
+	filter: drop-shadow(var(--white-shadow));
+	animation: gentleSway 6s ease-in-out infinite;
+	transform: scale(0.96);
+}
+
+@keyframes gentleSway {
+	0%, 100% { transform: rotate(-2deg) scale(0.96); }
+	50% { transform: rotate(2deg) scale(0.96); }
+}
+
+/* 3D Scene - IMPORTANT: Allow pointer events for iOS */
+#three-container {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	/* iOS fix: Enable touch events */
+	pointer-events: auto;
+	touch-action: manipulation;
+}
+
+#three-container canvas {
+	display: block;
+	width: 100% !important;
+	height: 100% !important;
+	/* iOS touch handling */
+	touch-action: manipulation;
+	pointer-events: auto;
+}
+
+/* UI Elements - CRITICAL FIX: Changed pointer-events */
+#ui-elements {
+	position: absolute;
+	inset: 0;
+	z-index: 10;
+	/* CHANGED: Allow child elements to receive events */
+	pointer-events: none;
+}
+
+/* iOS specific fixes for interactive elements */
+#ui-elements > * {
+	pointer-events: auto;
+}
+
+/* Loading screen */
+#loading-screen {
+	position: absolute;
+	inset: 0;
+	background: var(--loading-gradient);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	font-size: 18px;
+	transition: opacity var(--transition-medium);
+	backdrop-filter: blur(5px);
+	pointer-events: auto;
+}
+
+.loader {
+	width: 50px;
+	height: 50px;
+	border: 3px solid rgba(255, 255, 255, 0.3);
+	border-top: 3px solid #ffffff;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+	margin-bottom: 20px;
+}
+
+@keyframes spin {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+
+/* Audio controls - iOS compatible */
+#audio-controls {
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+	pointer-events: auto;
+	touch-action: manipulation;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+/* Logo - iOS compatible */
+#logo {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	pointer-events: auto;
+	z-index: 11;
+	touch-action: manipulation;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+#logo-image {
+	height: 156px;
+	width: auto;
+	opacity: 0.9;
+	filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+	transition: all var(--transition-fast);
+	/* iOS touch */
+	cursor: pointer;
+	-webkit-user-drag: none;
+	user-drag: none;
+}
+
+#logo-image:hover,
+#logo-image:active {
+	opacity: 1;
+	transform: scale(1.05);
+}
+
+/* Gothic mute text styling - iOS optimized */
+#mute-text {
+	font-family: var(--font-gothic);
+	color: white;
+	font-size: 23px;
+	cursor: pointer;
+	transition: all var(--transition-fast);
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	user-select: none;
+	-webkit-user-select: none;
+	text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+	padding: 8px 12px;
+	/* iOS touch target */
+	touch-action: manipulation;
+	min-width: 44px;
+	min-height: 44px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#mute-text:hover,
+#mute-text:active {
+	transform: scale(1.05);
+	text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+}
+
+#mute-text:focus {
+	outline: 2px solid rgba(255, 255, 255, 0.8);
+	outline-offset: 2px;
+	text-shadow: 0 0 20px rgba(255, 255, 255, 1);
+}
+
+/* Now Playing notification */
+#now-playing {
+	position: absolute;
+	bottom: 80px;
+	left: 50%;
+	transform: translateX(-50%) translateY(20px);
+	pointer-events: none;
+	opacity: 0;
+	transition: all var(--transition-medium);
+}
+
+#now-playing.show {
+	opacity: 1;
+	transform: translateX(-50%) translateY(0);
+}
+
+#now-playing-text {
+	font-family: var(--font-gothic);
+	color: white;
+	font-size: 16px;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	user-select: none;
+	text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+	background: rgba(0, 0, 0, 0.3);
+	padding: 8px 12px;
+	border-radius: var(--border-radius);
+	backdrop-filter: blur(10px);
+	white-space: nowrap;
+}
+
+/* Wind particles - Optimized layers */
+.wind-particles-layer {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	overflow: hidden;
+}
+
+#wind-particles-back { z-index: -1; }
+#wind-particles-between-bg { z-index: 0; }
+#wind-particles-between-tree { z-index: 1; }
+#wind-particles-between-3d { z-index: 2; }
+#wind-particles-front { z-index: 4; }
+
+.wind-particle {
+	position: absolute;
+	width: 15px;
+	height: 15px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 12px;
+	color: rgba(255, 255, 255, 0.9);
+	text-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+	animation: windFlow 15s linear infinite;
+	opacity: 0;
+	transform-origin: center;
+	will-change: transform;
+}
+
+.wind-particle::before {
+	content: '✦';
+	animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+	0%, 100% { 
+		transform: scale(1) rotate(0deg);
+		opacity: 0.9;
+	}
+	50% { 
+		transform: scale(1.3) rotate(180deg);
+		opacity: 1;
+	}
+}
+
+@keyframes windFlow {
+	0% {
+		opacity: 0;
+		transform: translateX(-100px) translateY(0) rotate(0deg) scale(0.5);
+	}
+	15% {
+		opacity: 1;
+		transform: translateX(15vw) translateY(0) rotate(90deg) scale(1);
+	}
+	85% {
+		opacity: 1;
+		transform: translateX(85vw) translateY(0) rotate(270deg) scale(1);
+	}
+	100% {
+		opacity: 0;
+		transform: translateX(calc(100vw + 100px)) translateY(0) rotate(360deg) scale(0.5);
+	}
+}
+
+/* Particle variations */
+.wind-particle:nth-child(odd) {
+	font-size: 10px;
+	animation-duration: 16s;
+}
+
+.wind-particle:nth-child(3n) {
+	font-size: 14px;
+	animation-duration: 22s;
+	opacity: 0.8;
+}
+
+.wind-particle:nth-child(4n) {
+	font-size: 16px;
+	animation-duration: 18s;
+	width: 18px;
+	height: 18px;
+}
+
+.wind-particle:nth-child(5n) {
+	font-size: 8px;
+	animation-duration: 14s;
+	opacity: 0.6;
+}
+
+/* Alternative star shapes */
+.wind-particle:nth-child(2n)::before { content: '✧'; }
+.wind-particle:nth-child(3n)::before { content: '✦'; }
+.wind-particle:nth-child(4n)::before { content: '✦'; }
+.wind-particle:nth-child(7n)::before { content: '⋆'; }
+
+/* Burst animations */
+.wind-particle.burst-accelerating {
+	animation-duration: 6s !important;
+	transition: animation-duration 1.5s ease-out;
+}
+
+.wind-particle.burst-decelerating {
+	transition: animation-duration 2s ease-in;
+}
+
+@keyframes windBurst {
+	0% {
+		opacity: 0;
+		transform: translateX(-100px) translateY(0) rotate(0deg) scale(0.3);
+	}
+	10% {
+		opacity: 0.3;
+		transform: translateX(-20px) translateY(0) rotate(45deg) scale(0.7);
+	}
+	25% {
+		opacity: 1;
+		transform: translateX(25vw) translateY(0) rotate(135deg) scale(1.4);
+	}
+	75% {
+		opacity: 1;
+		transform: translateX(75vw) translateY(0) rotate(315deg) scale(1.4);
+	}
+	90% {
+		opacity: 0.3;
+		transform: translateX(calc(100vw + 20px)) translateY(0) rotate(405deg) scale(0.7);
+	}
+	100% {
+		opacity: 0;
+		transform: translateX(calc(100vw + 100px)) translateY(0) rotate(450deg) scale(0.3);
+	}
+}
+
+/* Responsive design - Mobile first approach */
+@media (max-width: 768px) {
+	#background-image { height: 85vh; }
+	
+	#tree-image {
+		height: 90vh;
+		transform: scale(0.92);
+	}
+	
+	.fallback-tree {
+		font-size: clamp(280px, 75vmin, 500px);
+		transform: scale(0.92);
+	}
+	
+	#audio-controls {
+		bottom: 80px;
+		left: 15px;
+	}
+	
+	#logo {
+		bottom: 80px;
+		right: 15px;
+	}
+	
+	#logo-image { 
+		height: 117px;
+	}
+	
+	#now-playing {
+		bottom: 120px;
+	}
+	
+	#now-playing-text {
+		font-size: 14px;
+		padding: 6px 10px;
+	}
+	
+	#mute-text {
+		font-size: 21px;
+		padding: 8px 12px;
+	}
+	
+	#loading-screen { font-size: 16px; }
+	
+	.loader {
+		width: 40px;
+		height: 40px;
+		border-width: 2px;
+	}
+	
+	.wind-particle {
+		font-size: 8px;
+		width: 12px;
+		height: 12px;
+	}
+	
+	.wind-particle:nth-child(3n) { font-size: 10px; }
+	
+	.wind-particle:nth-child(4n) {
+		font-size: 12px;
+		width: 14px;
+		height: 14px;
+	}
+}
+
+@media (max-width: 480px) {
+	#background-image { height: 80vh; }
+	
+	#tree-image {
+		height: 85vh;
+		transform: scale(0.88);
+	}
+	
+	.fallback-tree {
+		font-size: clamp(250px, 70vmin, 450px);
+		transform: scale(0.88);
+	}
+	
+	#logo-image { 
+		height: 52px;
+	}
+	
+	#mute-text {
+		font-size: 18px;
+		padding: 6px 10px;
+	}
+	
+	#loading-screen { font-size: 14px; }
+	
+	.wind-particle {
+		font-size: 6px;
+		width: 10px;
+		height: 10px;
+	}
+	
+	#audio-controls,
+	#logo {
+		bottom: 70px;
+	}
+	
+	#audio-controls { left: 10px; }
+	#logo { right: 10px; }
+	
+	#now-playing {
+		bottom: 110px;
+	}
+}
+
+/* Landscape mobile optimization */
+@media (max-height: 500px) and (orientation: landscape) {
+	#background-image { max-height: 90%; }
+	
+	#tree-image {
+		max-height: 95%;
+		transform: scale(0.8);
+	}
+	
+	.fallback-tree {
+		font-size: clamp(200px, 60vmin, 350px);
+		transform: scale(0.8);
+	}
+	
+	#logo-image { 
+		height: 46px;
+	}
+	
+	#mute-text {
+		font-size: 18px;
+	}
+	
+	#audio-controls,
+	#logo {
+		bottom: 40px;
+	}
+	
+	#audio-controls { left: 10px; }
+	#logo { right: 10px; }
+	
+	#now-playing {
+		bottom: 80px;
+	}
+}
+
+/* iOS specific fixes */
+@supports (-webkit-touch-callout: none) {
+	/* iOS Safari specific styles */
+	body {
+		-webkit-user-select: none;
+		-webkit-text-size-adjust: 100%;
+	}
+	
+	#three-container {
+		-webkit-transform: translateZ(0);
+		transform: translateZ(0);
+	}
+	
+	#three-container canvas {
+		-webkit-transform: translateZ(0);
+		transform: translateZ(0);
+	}
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+	.wind-particle {
+		animation: none;
+		opacity: 0.3;
+	}
+	
+	.loader { animation-duration: 3s; }
+	
+	#tree-image,
+	#background-image,
+	#logo-image {
+		transition: none;
+	}
+}
+
+/* Performance optimizations for lower-end devices */
+@media (max-device-width: 480px) {
+	.wind-particle {
+		will-change: transform;
+	}
+	
+	#tree-image,
+	#background-image {
+		will-change: filter;
+	}
+}
+
+/* Improved touch targets for mobile */
+@media (hover: none) and (pointer: coarse) {
+	#mute-text {
+		min-width: 44px;
+		min-height: 44px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	#logo-image {
+		min-width: 44px;
+		min-height: 44px;
+	}
+}
